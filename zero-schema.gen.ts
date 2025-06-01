@@ -490,15 +490,14 @@ export const schema = {
           >,
           serverName: "background_color",
         },
-        owner: {
+        owner_id: {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "pipelines",
-            "owner"
+            "owner_id"
           >,
-          serverName: "owner_id",
         },
         isPrivate: {
           type: "boolean",
@@ -607,15 +606,14 @@ export const schema = {
             "title"
           >,
         },
-        pipeline: {
+        pipeline_id: {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "stages",
-            "pipeline"
+            "pipeline_id"
           >,
-          serverName: "pipeline_id",
         },
         position: {
           type: "number",
@@ -679,15 +677,14 @@ export const schema = {
             "description"
           >,
         },
-        stage: {
+        stage_id: {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "tasks",
-            "stage"
+            "stage_id"
           >,
-          serverName: "stage_id",
         },
         position: {
           type: "number",
@@ -698,15 +695,14 @@ export const schema = {
             "position"
           >,
         },
-        assignee: {
+        assignee_id: {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "tasks",
-            "assignee"
+            "assignee_id"
           >,
-          serverName: "assignee_id",
         },
         dueDate: {
           type: "number",
@@ -860,7 +856,7 @@ export const schema = {
         },
         sub: {
           type: "string",
-          optional: true,
+          optional: false,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "users",
@@ -912,15 +908,14 @@ export const schema = {
             "position"
           >,
         },
-        image: {
+        image_id: {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
             typeof zeroSchema,
             "users",
-            "image"
+            "image_id"
           >,
-          serverName: "image_id",
         },
         description: {
           type: "json",
@@ -1096,7 +1091,7 @@ export const schema = {
     pipelines: {
       owner: [
         {
-          sourceField: ["owner"],
+          sourceField: ["owner_id"],
           destField: ["id"],
           destSchema: "users",
           cardinality: "one",
@@ -1106,7 +1101,7 @@ export const schema = {
     stages: {
       pipeline: [
         {
-          sourceField: ["pipeline"],
+          sourceField: ["pipeline_id"],
           destField: ["id"],
           destSchema: "pipelines",
           cardinality: "one",
@@ -1116,7 +1111,7 @@ export const schema = {
     tasks: {
       stage: [
         {
-          sourceField: ["stage"],
+          sourceField: ["stage_id"],
           destField: ["id"],
           destSchema: "stages",
           cardinality: "one",
@@ -1124,7 +1119,7 @@ export const schema = {
       ],
       assignee: [
         {
-          sourceField: ["assignee"],
+          sourceField: ["assignee_id"],
           destField: ["id"],
           destSchema: "users",
           cardinality: "one",
@@ -1134,7 +1129,7 @@ export const schema = {
     users: {
       image: [
         {
-          sourceField: ["image"],
+          sourceField: ["image_id"],
           destField: ["id"],
           destSchema: "media",
           cardinality: "one",

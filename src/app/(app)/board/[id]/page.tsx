@@ -77,12 +77,12 @@ export default function PipelinePage() {
 
     try {
       const now = Date.now()
-      const position = stages.filter((l) => l.pipeline === currentPipeline.id).length
+      const position = stages.filter((l) => l.pipeline_id === currentPipeline.id).length
 
       await z.mutate.stages.insert({
         id: uuidv4(),
         title: newStageTitle,
-        pipeline: currentPipeline.id,
+        pipeline_id: currentPipeline.id,
         position: position || 0,
         createdAt: now,
         updatedAt: now,
@@ -98,13 +98,13 @@ export default function PipelinePage() {
   const createTask = async (stageId: string, title: string) => {
     try {
       const now = Date.now()
-      const position = tasks.filter((c) => c.stage === stageId).length
+      const position = tasks.filter((c) => c.stage_id === stageId).length
 
       await z.mutate.tasks.insert({
         id: uuidv4(),
         title,
-        stage: stageId,
-        assignee: user?.id || null,
+        stage_id: stageId,
+        assignee_id: user?.id || null,
         position: position || 0,
         createdAt: now,
         updatedAt: now,
@@ -142,7 +142,7 @@ export default function PipelinePage() {
         // Dragging over another task - find insertion index
         const overTask = over.data.current.task
         const stageTasks = tasks
-          .filter((c) => c.stage === overTask.stage && c.id !== active.id)
+          .filter((c) => c.stage_id === overTask.stage_id && c.id !== active.id)
           .sort((a, b) => (a.position || 0) - (b.position || 0))
 
         const overTaskIndex = stageTasks.findIndex((c) => c.id === overTask.id)
@@ -150,7 +150,7 @@ export default function PipelinePage() {
       } else if (overType === 'stage' && over.data.current) {
         // Dragging over a stage - will go to the end
         const stageId = over.data.current.stage.id
-        const stageTasks = tasks.filter((c) => c.stage === stageId && c.id !== active.id)
+        const stageTasks = tasks.filter((c) => c.stage_id === stageId && c.id !== active.id)
         setOverIndex(stageTasks.length)
       } else {
         setOverIndex(null)
@@ -189,7 +189,7 @@ export default function PipelinePage() {
 
   const findContainer = (id: string | number) => {
     if (tasks.some((task) => task.id === id)) {
-      return tasks.find((task) => task.id === id)?.stage
+      return tasks.find((task) => task.id === id)?.stage_id
     }
     return id
   }
@@ -210,22 +210,22 @@ export default function PipelinePage() {
     if (tasks.some((task) => task.id === overId)) {
       const overTask = tasks.find((task) => task.id === overId)
       if (overTask) {
-        newStageId = overTask.stage
+        newStageId = overTask.stage_id
         newPosition = overTask.position || 0
       }
     }
     // If dropped on a stage
     else if (stages.some((stage) => stage.id === overId)) {
       newStageId = overId as number
-      newPosition = tasks.filter((c) => c.stage === newStageId).length
+      newPosition = tasks.filter((c) => c.stage_id === newStageId).length
     }
 
     // Update task position
-    if (newStageId !== activeTask.stage || newPosition !== activeTask.position) {
+    if (newStageId !== activeTask.stage_id || newPosition !== activeTask.position) {
       try {
         await z.mutate.tasks.update({
           id: activeTask.id,
-          stage: newStageId,
+          stage_id: newStageId,
           position: newPosition,
           updatedAt: Math.floor(Date.now() / 1000),
         })
@@ -242,7 +242,7 @@ export default function PipelinePage() {
     if (!activeStage || !overStage || !activeStage.id || !overStage.id) return
 
     const pipelineStages = stages
-      .filter((l) => l.pipeline === currentPipeline?.id)
+      .filter((l) => l.pipeline_id === currentPipeline?.id)
       .sort((a, b) => (a.position || 0) - (b.position || 0))
 
     const oldIndex = pipelineStages.findIndex((l) => l.id === activeStage.id)
@@ -270,8 +270,10 @@ export default function PipelinePage() {
   }
 
   const pipelineStages = stages
-    .filter((stage) => stage.pipeline === currentPipeline?.id)
+    .filter((stage) => stage.pipeline_id === currentPipeline?.id)
     .sort((a, b) => (a.position || 0) - (b.position || 0))
+
+  console.log(tasks, 'tasks')
 
   // Show loading state while pipeline is being fetched
   if (!currentPipeline) {
@@ -343,7 +345,7 @@ export default function PipelinePage() {
                   stage={stage as Stage}
                   tasks={
                     tasks
-                      .filter((c) => c.stage === stage.id && c.id !== null)
+                      .filter((c) => c.stage_id === stage.id && c.id !== null)
                       .sort((a, b) => (a.position || 0) - (b.position || 0)) as Task[]
                   }
                   onTaskCreate={createTask}

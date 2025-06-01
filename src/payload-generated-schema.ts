@@ -50,13 +50,13 @@ export const users = pgTable(
   'users',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    sub: varchar('sub'),
+    sub: varchar('sub').notNull(),
     username: varchar('username').notNull(),
     name: varchar('name').notNull().default(''),
     first_name: varchar('first_name').notNull().default(''),
     last_name: varchar('last_name').notNull().default(''),
     position: varchar('position'),
-    image: uuid('image_id').references(() => media.id, {
+    image_id: uuid('image_id').references(() => media.id, {
       onDelete: 'set null',
     }),
     description: jsonb('description'),
@@ -83,7 +83,7 @@ export const users = pgTable(
   },
   (columns) => ({
     users_username_idx: uniqueIndex('users_username_idx').on(columns.username),
-    users_image_idx: index('users_image_idx').on(columns.image),
+    users_image_idx: index('users_image_idx').on(columns.image_id),
     users_updated_at_idx: index('users_updated_at_idx').on(columns.updatedAt),
     users_created_at_idx: index('users_created_at_idx').on(columns.createdAt),
     users_email_idx: uniqueIndex('users_email_idx').on(columns.email),
@@ -125,7 +125,7 @@ export const pipelines = pgTable(
     title: varchar('title').notNull(),
     description: varchar('description'),
     backgroundColor: varchar('background_color').default('#0079bf'),
-    owner: uuid('owner_id')
+    owner_id: uuid('owner_id')
       .notNull()
       .references(() => users.id, {
         onDelete: 'set null',
@@ -139,7 +139,7 @@ export const pipelines = pgTable(
       .notNull(),
   },
   (columns) => ({
-    pipelines_owner_idx: index('pipelines_owner_idx').on(columns.owner),
+    pipelines_owner_idx: index('pipelines_owner_idx').on(columns.owner_id),
     pipelines_updated_at_idx: index('pipelines_updated_at_idx').on(columns.updatedAt),
     pipelines_created_at_idx: index('pipelines_created_at_idx').on(columns.createdAt),
   }),
@@ -177,7 +177,7 @@ export const stages = pgTable(
   {
     id: uuid('id').defaultRandom().primaryKey(),
     title: varchar('title').notNull(),
-    pipeline: uuid('pipeline_id')
+    pipeline_id: uuid('pipeline_id')
       .notNull()
       .references(() => pipelines.id, {
         onDelete: 'set null',
@@ -191,7 +191,7 @@ export const stages = pgTable(
       .notNull(),
   },
   (columns) => ({
-    stages_pipeline_idx: index('stages_pipeline_idx').on(columns.pipeline),
+    stages_pipeline_idx: index('stages_pipeline_idx').on(columns.pipeline_id),
     stages_updated_at_idx: index('stages_updated_at_idx').on(columns.updatedAt),
     stages_created_at_idx: index('stages_created_at_idx').on(columns.createdAt),
   }),
@@ -223,13 +223,13 @@ export const tasks = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
     title: varchar('title').notNull(),
     description: varchar('description'),
-    stage: uuid('stage_id')
+    stage_id: uuid('stage_id')
       .notNull()
       .references(() => stages.id, {
         onDelete: 'set null',
       }),
     position: numeric('position').notNull().default('0'),
-    assignee: uuid('assignee_id').references(() => users.id, {
+    assignee_id: uuid('assignee_id').references(() => users.id, {
       onDelete: 'set null',
     }),
     dueDate: timestamp('due_date', { mode: 'string', withTimezone: true, precision: 3 }),
@@ -241,8 +241,8 @@ export const tasks = pgTable(
       .notNull(),
   },
   (columns) => ({
-    tasks_stage_idx: index('tasks_stage_idx').on(columns.stage),
-    tasks_assignee_idx: index('tasks_assignee_idx').on(columns.assignee),
+    tasks_stage_idx: index('tasks_stage_idx').on(columns.stage_id),
+    tasks_assignee_idx: index('tasks_assignee_idx').on(columns.assignee_id),
     tasks_updated_at_idx: index('tasks_updated_at_idx').on(columns.updatedAt),
     tasks_created_at_idx: index('tasks_created_at_idx').on(columns.createdAt),
   }),
@@ -450,7 +450,7 @@ export const relations_users_roles = relations(users_roles, ({ one }) => ({
 }))
 export const relations_users = relations(users, ({ one, many }) => ({
   image: one(media, {
-    fields: [users.image],
+    fields: [users.image_id],
     references: [media.id],
     relationName: 'image',
   }),
@@ -473,7 +473,7 @@ export const relations_pipelines_rels = relations(pipelines_rels, ({ one }) => (
 }))
 export const relations_pipelines = relations(pipelines, ({ one, many }) => ({
   owner: one(users, {
-    fields: [pipelines.owner],
+    fields: [pipelines.owner_id],
     references: [users.id],
     relationName: 'owner',
   }),
@@ -483,7 +483,7 @@ export const relations_pipelines = relations(pipelines, ({ one, many }) => ({
 }))
 export const relations_stages = relations(stages, ({ one }) => ({
   pipeline: one(pipelines, {
-    fields: [stages.pipeline],
+    fields: [stages.pipeline_id],
     references: [pipelines.id],
     relationName: 'pipeline',
   }),
@@ -509,12 +509,12 @@ export const relations_tasks_rels = relations(tasks_rels, ({ one }) => ({
 }))
 export const relations_tasks = relations(tasks, ({ one, many }) => ({
   stage: one(stages, {
-    fields: [tasks.stage],
+    fields: [tasks.stage_id],
     references: [stages.id],
     relationName: 'stage',
   }),
   assignee: one(users, {
-    fields: [tasks.assignee],
+    fields: [tasks.assignee_id],
     references: [users.id],
     relationName: 'assignee',
   }),
