@@ -858,6 +858,15 @@ export const schema = {
             "id"
           >,
         },
+        sub: {
+          type: "string",
+          optional: true,
+          customType: null as unknown as ZeroCustomType<
+            typeof zeroSchema,
+            "users",
+            "sub"
+          >,
+        },
         username: {
           type: "string",
           optional: false,
@@ -947,15 +956,6 @@ export const schema = {
             typeof zeroSchema,
             "users",
             "gender"
-          >,
-        },
-        sub: {
-          type: "string",
-          optional: true,
-          customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
-            "users",
-            "sub"
           >,
         },
         updatedAt: {

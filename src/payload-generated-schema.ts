@@ -50,6 +50,7 @@ export const users = pgTable(
   'users',
   {
     id: uuid('id').defaultRandom().primaryKey(),
+    sub: varchar('sub'),
     username: varchar('username').notNull(),
     name: varchar('name').notNull().default(''),
     first_name: varchar('first_name').notNull().default(''),
@@ -62,7 +63,6 @@ export const users = pgTable(
     mobile: varchar('mobile'),
     phone: varchar('phone'),
     gender: enum_users_gender('gender'),
-    sub: varchar('sub'),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
