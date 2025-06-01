@@ -3564,10 +3564,10 @@
     bindings "^1.5.0"
     prebuild-install "^7.1.1"
 
-"@rocicorp/zero@^0.20.2025052100":
-  version "0.20.2025052100"
-  resolved "https://registry.yarnpkg.com/@rocicorp/zero/-/zero-0.20.2025052100.tgz#21c532db34313a280702c73359b4a50ef747c602"
-  integrity sha512-EoU+X6uq2Q6PyQffsRQNqI1DM+Jyza2ION1cuIQEvpwyui8saQurqqyJzl8c1AW4u06AhT/gpMv0zi8EYge9Zw==
+"@rocicorp/zero@^0.21.2025052900":
+  version "0.21.2025052900"
+  resolved "https://registry.yarnpkg.com/@rocicorp/zero/-/zero-0.21.2025052900.tgz#8bfa2fe052a78e65cfff1318045e3b7faeb5f1d2"
+  integrity sha512-3wZ/e6h2nZvAB0kGm1cffe3ZV9STGMTlNKMtfGzlaE5mXDV1w9AivffmfWGp76MrlJMVoyXAaZ/ZKaK3O5f0dg==
   dependencies:
     "@badrap/valita" "0.3.11"
     "@databases/escape-identifier" "^1.0.3"
@@ -3604,6 +3604,7 @@
     defu "^6.1.4"
     eventemitter3 "^5.0.1"
     fastify "^5.0.0"
+    is-in-subnet "^4.0.1"
     jose "^5.9.3"
     js-xxhash "^4.0.0"
     json-custom-numbers "^3.1.1"
@@ -6947,6 +6948,11 @@ is-hexadecimal@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-hexadecimal/-/is-hexadecimal-2.0.1.tgz#86b5bf668fca307498d319dfc03289d781a90027"
   integrity sha512-DgZQp241c8oO6cA1SbTEWiXeoxV42vlcJxgH+B3hi1AiqqKruZR3ZGF8In3fj4+/y/7rHvlOZLZtgJ/4ttYGZg==
 
+is-in-subnet@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/is-in-subnet/-/is-in-subnet-4.0.1.tgz#7a93bf67636021598dc483e934d8841cb8b7a537"
+  integrity sha512-D3mAuAo6vZ+/AxsLkEIZ3moTx7AIGQLLzLQslV6n0RRO/CzdUemXap+lj3OPAehKCbdkGPikxOVUYqRo0GGJAA==
+
 is-map@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/is-map/-/is-map-2.0.3.tgz#ede96b7fe1e270b3c4465e3a465658764926d62e"
@@ -7378,11 +7384,6 @@ loose-envify@^1.4.0:
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
-
-lucide-react@^0.511.0:
-  version "0.511.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.511.0.tgz#1dfef3065c725ac83f5fe0a6f02d1e0b0c36e641"
-  integrity sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==
 
 lunr@^2.3.9:
   version "2.3.9"

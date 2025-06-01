@@ -38,7 +38,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
-import { Stage, Task } from '@/payload-types'
+import { Stage, Task, User } from '@/payload-types'
+
+interface TaskWithAssignee extends Task {
+  assignedUser: User
+}
 
 export default function PipelinePage() {
   const params = useParams()
@@ -50,13 +54,13 @@ export default function PipelinePage() {
   // Use Zero React hooks for data fetching
   const [pipelines] = useQuery(z.query.pipelines)
   const [stages] = useQuery(z.query.stages)
-  const [tasks] = useQuery(z.query.tasks.related('assignee'))
+  const [tasks] = useQuery(z.query.tasks.related('assignedUser'))
 
   const [newStageTitle, setNewStageTitle] = useState('')
   const [showNewStageForm, setShowNewStageForm] = useState(false)
 
   // Simple drag and drop state
-  const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [activeTask, setActiveTask] = useState<TaskWithAssignee | null>(null)
   const [activeStage, setActiveStage] = useState<Stage | null>(null)
   const [overId, setOverId] = useState<string | number | null>(null)
   const [overIndex, setOverIndex] = useState<number | null>(null)
@@ -230,6 +234,7 @@ export default function PipelinePage() {
           updatedAt: Math.floor(Date.now() / 1000),
         })
       } catch (error) {
+        console.log(newStageId)
         console.error('Error updating task:', error)
       }
     }
@@ -344,7 +349,7 @@ export default function PipelinePage() {
                   tasks={
                     tasks
                       .filter((c) => c.stage === stage.id && c.id !== null)
-                      .sort((a, b) => (a.position || 0) - (b.position || 0)) as Task[]
+                      .sort((a, b) => (a.position || 0) - (b.position || 0)) as TaskWithAssignee[]
                   }
                   onTaskCreate={createTask}
                   isOver={overId === stage.id}
@@ -427,7 +432,7 @@ const DropIndicator: React.FC = () => (
 // Simple Sortable Stage Component
 interface SortableStageComponentProps {
   stage: Stage
-  tasks: Task[]
+  tasks: TaskWithAssignee[]
   onTaskCreate: (stageId: string, title: string) => void
   isOver: boolean
   isDraggingTask: boolean
@@ -514,7 +519,7 @@ const SortableStageComponent: React.FC<SortableStageComponentProps> = ({
 
 // Simple Sortable Task Component
 interface SortableTaskComponentProps {
-  task: Task
+  task: TaskWithAssignee
   isDraggedTask?: boolean
 }
 
@@ -555,6 +560,8 @@ const SortableTaskComponent: React.FC<SortableTaskComponentProps> = ({
     )
   }
 
+  console.log(task)
+
   return (
     <div
       ref={setNodeRef}
@@ -580,18 +587,18 @@ const SortableTaskComponent: React.FC<SortableTaskComponentProps> = ({
           <div className="text-xs text-gray-400">#{task.id}</div>
         </div>
       </div>
-      {task.assignee && typeof task.assignee !== 'string' && (
+      {task.assignedUser && typeof task.assignedUser !== 'string' && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-gradient-to-br from-blue-600 to-purple-600 text-white text-sm">
-                  {task.assignee?.email?.charAt(0).toUpperCase()}
+                  {task.assignedUser?.email?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{task.assignee?.email}</p>
+              <p>{task.assignedUser?.email}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
